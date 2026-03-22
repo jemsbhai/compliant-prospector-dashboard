@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "The Compliant Prospector",
-  description: "Compliance algebra-powered prospecting engine for financial advisors — Pulse Miami 2026",
+  title: "ClearPath",
+  description: "ClearPath — Compliance algebra-powered prospecting for financial advisors, powered by the Compliance Algebra. Pulse Miami 2026.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 CP
               </div>
               <span className="font-semibold text-[var(--text-primary)]">
-                The Compliant Prospector
+                ClearPath
               </span>
             </a>
             <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)]">
