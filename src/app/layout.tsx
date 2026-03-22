@@ -26,6 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </span>
             </a>
             <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)]">
+              <a
+                href="/demo"
+                className="px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+              >
+                Live Demo
+              </a>
               <span className="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs font-medium">
                 Pulse Miami 2026
               </span>
