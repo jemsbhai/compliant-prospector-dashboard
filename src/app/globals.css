@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0a0f1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2235;
+  --bg-card-hover: #1e2a3f;
+  --border-subtle: #1f2937;
+  --border-accent: #374151;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --accent-blue: #3b82f6;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-orange: #f97316;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Opinion bar — the tri-color bar showing l/v/u */
+.opinion-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.opinion-bar .lawfulness { background: var(--accent-emerald); }
+.opinion-bar .violation { background: var(--accent-red); }
+.opinion-bar .uncertainty { background: var(--accent-amber); }
+
+/* Card hover glow */
+.card-glow {
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.card-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.08);
+  border-color: #2d3a4f;
+}
+
+/* Diff highlight for corrections */
+.diff-removed {
+  background: rgba(239, 68, 68, 0.15);
+  text-decoration: line-through;
+  color: #fca5a5;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.diff-added {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+/* Pulse animation for live checks */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
