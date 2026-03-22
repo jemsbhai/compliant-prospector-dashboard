@@ -5,6 +5,15 @@ import { ComplianceBadge, OpinionBar, OpinionValues, SeverityBadge } from "@/com
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+// Fake Gmail send state
+type SendState = "idle" | "connecting" | "authenticating" | "sending" | "delivered";
+const SEND_STEPS: { state: SendState; label: string; duration: number }[] = [
+  { state: "connecting", label: "Connecting to Gmail API...", duration: 800 },
+  { state: "authenticating", label: "OAuth2 handshake verified", duration: 600 },
+  { state: "sending", label: "Sending via Gmail SMTP relay...", duration: 1200 },
+  { state: "delivered", label: "Email delivered successfully", duration: 0 },
+];
+
 // Pre-loaded non-compliant message — deliberately packed with violations
 const SAMPLE_BAD_MESSAGE = `Subject: Re: Exclusive Opportunity — Act Now!
 
@@ -41,6 +50,19 @@ export default function DemoPage() {
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [useAlgebra, setUseAlgebra] = useState(true);
+  const [sendState, setSendState] = useState<SendState>("idle");
+  const [sendLog, setSendLog] = useState<string[]>([]);
+
+  const fakeSendEmail = async () => {
+    setSendLog([]);
+    for (const step of SEND_STEPS) {
+      setSendState(step.state);
+      setSendLog(prev => [...prev, step.label]);
+      if (step.duration > 0) {
+        await new Promise(r => setTimeout(r, step.duration));
+      }
+    }
+  };
 
   const runCheck = async () => {
     setLoading(true);
@@ -297,6 +319,79 @@ export default function DemoPage() {
                   <span className="text-amber-400">
                     Δu={correction.improvement.uncertainty_delta >= 0 ? "+" : ""}{correction.improvement.uncertainty_delta.toFixed(3)}
                   </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Gmail Send Button */}
+          {correction.corrected_message && (
+            <div className="p-5 rounded-xl border border-blue-500/20 bg-blue-500/5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" stroke="#60a5fa" strokeWidth="1.5" />
+                    <path d="M22 6l-10 7L2 6" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <h3 className="text-sm font-semibold text-blue-400">Send via Gmail</h3>
+                </div>
+                <button
+                  onClick={fakeSendEmail}
+                  disabled={sendState !== "idle" && sendState !== "delivered"}
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    sendState === "delivered"
+                      ? "bg-emerald-600 text-white"
+                      : sendState !== "idle"
+                      ? "bg-blue-600/50 text-white cursor-not-allowed"
+                      : "bg-blue-600 text-white hover:bg-blue-500"
+                  }`}
+                >
+                  {sendState === "idle" ? (
+                    "Send Compliant Email"
+                  ) : sendState === "delivered" ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Delivered
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Sending...
+                    </span>
+                  )}
+                </button>
+              </div>
+
+              {/* Send to / from */}
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div className="p-2 rounded-lg bg-[var(--bg-secondary)]">
+                  <span className="text-[var(--text-muted)]">From: </span>
+                  <span className="text-[var(--text-primary)]">advisor@fortiswm.com</span>
+                </div>
+                <div className="p-2 rounded-lg bg-[var(--bg-secondary)]">
+                  <span className="text-[var(--text-muted)]">To: </span>
+                  <span className="text-[var(--text-primary)]">john.smith@meridiancap.com</span>
+                </div>
+              </div>
+
+              {/* Send log */}
+              {sendLog.length > 0 && (
+                <div className="space-y-1 font-mono text-xs">
+                  {sendLog.map((line, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <span className={i === sendLog.length - 1 && sendState === "delivered" ? "text-emerald-400" : "text-blue-400"}>
+                        {i === sendLog.length - 1 && sendState !== "delivered" ? "⟳" : "✓"}
+                      </span>
+                      <span className="text-[var(--text-secondary)]">{line}</span>
+                    </div>
+                  ))}
+                  {sendState === "delivered" && (
+                    <div className="mt-2 p-2 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs">
+                      Message ID: &lt;{Math.random().toString(36).slice(2, 14)}@gmail.com&gt; · Compliant version sent
+                    </div>
+                  )}
                 </div>
               )}
             </div>
