@@ -84,8 +84,8 @@ export default function StatsOverview({ stats }: { stats: StatsResponse }) {
         {correctedData && (
           <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] p-5">
             <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-4">
-              After Self-Correction
-              <span className="ml-2 text-xs text-emerald-400 font-normal">✓ Corrected</span>
+              After Self-Correction (Template)
+              <span className="ml-2 text-xs text-emerald-400 font-normal">✓ Auto-fixed</span>
             </h3>
             <div className="flex items-center gap-6">
               <div className="w-36 h-36">

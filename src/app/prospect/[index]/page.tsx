@@ -160,6 +160,86 @@ export default function ProspectDetailPage() {
         </div>
       </div>
 
+      {/* Template Self-Correction showcase */}
+      {result.template_correction && result.template_correction.correction.corrections_applied.length > 0 && (
+        <div className="p-5 rounded-xl border border-emerald-500/20 bg-emerald-500/5">
+          <h3 className="text-sm font-semibold text-emerald-400 mb-4">
+            ✨ Self-Correction Engine — Template Message
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)] mb-4">
+            The compliance algebra detects flagged phrases and the self-correction engine automatically rewrites them to be compliant.
+            Below shows the template message corrections with improvement deltas.
+          </p>
+
+          {/* Original template message */}
+          <div className="mb-4">
+            <div className="text-xs text-[var(--text-muted)] mb-1">Original Template Message:</div>
+            <div className="text-xs text-[var(--text-primary)] whitespace-pre-wrap bg-[var(--bg-secondary)] p-3 rounded-lg font-mono">
+              {result.template_correction.template_message}
+            </div>
+          </div>
+
+          {/* Corrections */}
+          <div className="space-y-2 mb-4">
+            <div className="flex items-center gap-3">
+              <span className={`text-xs font-medium px-2 py-1 rounded ${
+                result.template_correction.correction.fully_resolved
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "bg-amber-500/10 text-amber-400"
+              }`}>
+                {result.template_correction.correction.fully_resolved ? "✓ Fully Resolved" : "⚠ Partially Resolved"}
+              </span>
+              <span className="text-xs text-[var(--text-muted)]">
+                {result.template_correction.correction.corrections_applied.length} corrections · {result.template_correction.correction.iterations} iterations · {result.template_correction.correction.correction_method}
+              </span>
+            </div>
+            {result.template_correction.correction.corrections_applied.map((step, i) => (
+              <div key={i} className="flex items-start gap-3 p-2 rounded-lg bg-[var(--bg-secondary)]">
+                <div className="w-5 h-5 rounded-full bg-[var(--bg-card)] text-[var(--text-muted)] text-xs flex items-center justify-center shrink-0 mt-0.5">
+                  {i + 1}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs">
+                    <span className="diff-removed">{step.original}</span>
+                    <span className="mx-2 text-[var(--text-muted)]">→</span>
+                    <span className="diff-added">{step.replacement}</span>
+                  </div>
+                  <div className="text-xs text-[var(--text-muted)] mt-0.5">
+                    {step.rule_id} · {step.method}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Corrected template message */}
+          {result.template_correction.correction.corrected_message && (
+            <div className="mb-4">
+              <div className="text-xs text-emerald-400 mb-1">✓ Corrected Template Message:</div>
+              <div className="text-xs text-[var(--text-primary)] whitespace-pre-wrap bg-[var(--bg-secondary)] p-3 rounded-lg font-mono">
+                {result.template_correction.correction.corrected_message}
+              </div>
+            </div>
+          )}
+
+          {/* Improvement delta */}
+          {result.template_correction.correction.improvement && (
+            <div className="flex gap-4 text-xs font-mono p-2 rounded-lg bg-[var(--bg-secondary)]">
+              <span className="text-[var(--text-muted)]">Improvement:</span>
+              <span className={result.template_correction.correction.improvement.lawfulness_delta >= 0 ? "text-emerald-400" : "text-red-400"}>
+                Δl={result.template_correction.correction.improvement.lawfulness_delta >= 0 ? "+" : ""}{result.template_correction.correction.improvement.lawfulness_delta.toFixed(3)}
+              </span>
+              <span className={result.template_correction.correction.improvement.violation_delta <= 0 ? "text-emerald-400" : "text-red-400"}>
+                Δv={result.template_correction.correction.improvement.violation_delta >= 0 ? "+" : ""}{result.template_correction.correction.improvement.violation_delta.toFixed(3)}
+              </span>
+              <span className="text-amber-400">
+                Δu={result.template_correction.correction.improvement.uncertainty_delta >= 0 ? "+" : ""}{result.template_correction.correction.improvement.uncertainty_delta.toFixed(3)}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Full compliance detail */}
       <ComplianceDetail result={result} />
 

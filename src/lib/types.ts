@@ -123,6 +123,12 @@ export interface Prospect {
   concerns: string[];
 }
 
+export interface TemplateCorrectionData {
+  template_message: string;
+  correction: CorrectionResult;
+  compliance_level: string;
+}
+
 export interface ProspectResult {
   prospect: Prospect;
   template_message: string;
@@ -139,6 +145,7 @@ export interface ProspectResult {
   gemini_api_calls?: number;
   method: string;
   timestamp: number;
+  template_correction?: TemplateCorrectionData;
 }
 
 export interface ProspectSummary {
