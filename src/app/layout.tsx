@@ -27,6 +27,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </a>
             <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)]">
               <a
+                href="/about"
+                className="hover:text-[var(--text-primary)] transition-colors text-xs"
+              >
+                The Algebra
+              </a>
+              <a
                 href="/demo"
                 className="px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
               >
